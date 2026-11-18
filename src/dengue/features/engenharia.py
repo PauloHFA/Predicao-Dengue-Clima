@@ -57,13 +57,26 @@ def adicionar_defasagens(
 
 
 def adicionar_atributos_sazonais(painel: pd.DataFrame) -> pd.DataFrame:
-    """Adiciona harmônicos sazonais (seno e cosseno da Semana Epidemiológica) e tendência determinística."""
+    """Adiciona harmônicos sazonais (Fourier de 1ª a 4ª ordem), curva gaussiana de pico e janela epidêmica."""
     df = painel.copy()
     se_num = df["se"].astype(float)
+
+    # 1. Decomposição harmônica de Fourier (ordens 1 a 4: ciclos anual, semestral, quadrimestral e trimestral)
     df["sen_se_1"] = np.sin(2.0 * np.pi * se_num / 52.18)
     df["cos_se_1"] = np.cos(2.0 * np.pi * se_num / 52.18)
     df["sen_se_2"] = np.sin(4.0 * np.pi * se_num / 52.18)
     df["cos_se_2"] = np.cos(4.0 * np.pi * se_num / 52.18)
+    df["sen_se_3"] = np.sin(6.0 * np.pi * se_num / 52.18)
+    df["cos_se_3"] = np.cos(6.0 * np.pi * se_num / 52.18)
+    df["sen_se_4"] = np.sin(8.0 * np.pi * se_num / 52.18)
+    df["cos_se_4"] = np.cos(8.0 * np.pi * se_num / 52.18)
+
+    # 2. Curva gaussiana de proximidade do pico sazonal histórico (SE 18 ± 6 semanas)
+    df["pico_sazonal_dist"] = np.exp(-0.5 * ((se_num - 18.0) / 6.0) ** 2)
+
+    # 3. Indicador da janela crítica sazonal (alta transmissão epidêmica: SE 10 a SE 24)
+    df["janela_sazonal_alto_risco"] = ((se_num >= 10.0) & (se_num <= 24.0)).astype(float)
+
     return df
 
 
@@ -125,7 +138,18 @@ def listar_colunas_features(
     horizonte: int,
 ) -> tuple[list[str], list[str]]:
     """Retorna (features_sem_clima, features_com_clima) para comparação controlada de H1."""
-    sazonais = ["sen_se_1", "cos_se_1", "sen_se_2", "cos_se_2"]
+    sazonais = [
+        "sen_se_1",
+        "cos_se_1",
+        "sen_se_2",
+        "cos_se_2",
+        "sen_se_3",
+        "cos_se_3",
+        "sen_se_4",
+        "cos_se_4",
+        "pico_sazonal_dist",
+        "janela_sazonal_alto_risco",
+    ]
     lags_inc = [
         c
         for c in df.columns

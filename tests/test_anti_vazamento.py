@@ -78,3 +78,28 @@ def test_escalonador_por_dobra_nao_vaza_estatisticas_do_teste() -> None:
     # Em y, o NaN no teste deve ser imputado com a mediana do treino (1.5), resultando em z-score 0.0
     assert np.isclose(teste_transformado.loc[0, "y"], 0.0)
 
+
+def test_atributos_sazonais_avancados_sem_vazamento() -> None:
+    """Valida a criação dos harmônicos de Fourier estendidos, curva gaussiana de pico e janela epidêmica."""
+    from dengue.features.engenharia import adicionar_atributos_sazonais
+
+    painel = _criar_painel_sintetico()
+    df_saz = adicionar_atributos_sazonais(painel)
+
+    # Verifica presença dos novos atributos
+    for col in [
+        "sen_se_1", "cos_se_1",
+        "sen_se_2", "cos_se_2",
+        "sen_se_3", "cos_se_3",
+        "sen_se_4", "cos_se_4",
+        "pico_sazonal_dist",
+        "janela_sazonal_alto_risco",
+    ]:
+        assert col in df_saz.columns, f"Coluna sazonal {col} ausente"
+
+    # Verifica valores finitos e limites matemáticos esperados
+    assert df_saz["pico_sazonal_dist"].between(0.0, 1.0).all()
+    assert df_saz["janela_sazonal_alto_risco"].isin([0.0, 1.0]).all()
+    assert df_saz["sen_se_3"].between(-1.0, 1.0).all()
+
+
