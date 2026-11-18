@@ -353,7 +353,17 @@ def main(argv: list[str] | None = None) -> int:
     args = argv if argv is not None else sys.argv[1:]
     comando = args[0].lower() if args else "all"
 
-    if comando == "data":
+    if comando in ("--help", "-h", "help"):
+        print("Uso: python -m dengue.cli [comando]")
+        print("Comandos disponíveis:")
+        print("  data        Executa ingestão e validação dos dados brutos")
+        print("  infodengue  Executa ingestão de dados da API do InfoDengue")
+        print("  features    Gera as matrizes de features sem vazamento temporal")
+        print("  train       Treina e valida os modelos preditivos (LightGBM, SARIMAX, GLM)")
+        print("  report      Compila métricas, tabelas e figuras dos relatórios")
+        print("  all         Executa todas as etapas do pipeline de ponta a ponta (padrão)")
+        return 0
+    elif comando == "data":
         etapa_data()
     elif comando == "infodengue":
         etapa_infodengue()

@@ -1,4 +1,4 @@
-# Projeto de Data Science: Dengue no Brasil – Clima, Sazonalidade e Previsão de Casos
+# Predicao-Dengue-Clima
 
 [![Testes Automatizados](https://img.shields.io/badge/Testes-23%20passed-success)](tests/)
 [![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.14-blue)](pyproject.toml)
@@ -6,6 +6,8 @@
 [![Cobertura Censitária](https://img.shields.io/badge/Cobertura-223%20Municípios%20(PB)-10b981)](reports/mapa_lisa_interativo_pb.html)
 [![Rigor Metodológico](https://img.shields.io/badge/Protocolo-REG--01%20a%20REG--14-purple)](docs/plano_de_analise.md)
 [![Dados Reais](https://img.shields.io/badge/Dados%20Reais-InfoDengue%20%7C%20SINAN%20%7C%20INMET%20%7C%20IBGE-success)](data/raw/manifesto_hashes.json)
+
+> **Plataforma de Ciência de Dados para Análise e Previsão de Casos de Dengue — Clima, Sazonalidade e Incerteza** (ver [PENDENCIAS.md](PENDENCIAS.md))
 
 Repositório científico de análise de dados abertos de saúde pública e meteorologia, desenhado para produzir uma investigação reprodutível, auditável e cientificamente defensável em estrita conformidade com as **Regras de Rigor Científico (`REG-01` a `REG-14`)**.
 
